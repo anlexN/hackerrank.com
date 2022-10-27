@@ -1,25 +1,27 @@
 ### [Lego Blocks](https://www.hackerrank.com/challenges/one-month-preparation-kit-lego-blocks/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=preparation-kits&playlist_slugs%5B%5D=one-month-preparation-kit&playlist_slugs%5B%5D=one-month-week-four)
 
 [Lego Blocks - Dynamic Programming](https://stackoverflow.com/questions/15424945/lego-blocks-dynamic-programming)
-First, let's see how many M\*N walls can we build if we neglect the need to keep them connected:
+First, let's see how many $M * N$ walls can we build if we neglect the need to keep them connected:
 
 We can treat each row separately, and then multiply the counts since they are independent.
 
-There is only one way to tile a 0*1 or a 1*1 wall, and the number of ways to tile an n*1 is the total of the number of ways to tile {n-1}*1...{n-4}*1-sized walls, the reason being these walls can be obtained by removing the last tile of the n*1 wall.
-铺设 0*1 或 1*1 墙的方法只有一种，铺设 n*1 的方法是铺设{n-1}*1...{n-4}*1 大小的墙的方法的总和，原因是这些墙可以通过移除 n*1 墙的最后一块瓷砖得到。
+There is only one way to tile a $0 * 1$ or a $1 * 1$ wall, and the number of ways to tile an $n * 1$ is the total of the number of ways to tile $\{n-1\} * 1...\{n-4\} * 1$-sized walls, the reason being these walls can be obtained by removing the last tile of the $n*1$ wall.
 
-This gives rise to a tetranacci sequence, [OEIS A000078](http://oeis.org/A000078). The number of all W*H walls is a(w,h)=T(w)^h.
-这就产生了一个特拉纳奇序列，OEIS A000078。所有 W*H 墙的数量是 a(w,h)=T(w)^h。
+> 铺设 $0 * 1$ 或 $1 * 1$ 墙的方法只有一种，铺设 n*1 的方法是铺设{n-1} * 1...{n-4} * 1 大小的墙的方法的总和，原因是这些墙可以通过移除 $n * 1$ 墙的最后一块瓷砖得到。
+
+This gives rise to a tetranacci sequence, [OEIS A000078](http://oeis.org/A000078). The number of all $W * H$ walls is $a(w,h)=T(w)^h$.
+
+> 这就产生了一个特拉纳奇序列，[OEIS A000078](http://oeis.org/A000078)。所有 $W * H$ 墙的数量是 $a(w,h)=T(w)^h$。
 
 Now, to count the number of solid walls. MBo's answer already contains the basic premise:
 
-Branch on the leftmost place where the wall is not connected. The number of All W*H walls is the number of Solid X*H walls times the number of All {W-X}*H walls, summed across all possible values of X, plus the number of Solid W*H walls:
+Branch on the leftmost place where the wall is not connected. The number of All $W * H$ walls is the number of Solid $X * H$ walls times the number of All $\{W - X\} * H$ walls, summed across all possible values of $X$, plus the number of Solid $W * H$ walls:
 
 ```javascript
 A(W,H) = sum{X=1..{W-1}}(S(X,H)*A(W-X,H)) + S(W,H)
 ```
 
-As a last step, we separate S(M,H) term, which is the value we want to calculate, and repeat the previous formulas:
+As a last step, we separate $S(M,H)$ term, which is the value we want to calculate, and repeat the previous formulas:
 
 ```javascript
 S(W,H) = A(W,H) - sum_x( S(X,H)*A(W-X,H) ) //implicitly, S(1,H)=1
@@ -36,18 +38,18 @@ This also provides an `O(W^2)` algorithm to compute `S` (assuming proper memoiza
 
 [combination problem on Lego blocks](https://math.stackexchange.com/questions/1841028/combination-problem-on-lego-blocks)
 
-> You have 4 types of lego blocks, of sizes given in (length x width x height) as (1 x 1 x 1), (2 x 1 x 1), (3 x 1 x 1), and (4 x 1 x 1). Assume that you have an infinite number of blocks of each type.
+> You have 4 types of lego blocks, of sizes given in $length \times width \times height$ as $1 \times 1 \times 1$, $2 \times 1 \times 1$, $3 \times 1 \times 1$, and $4 \times 1 \times 1$. Assume that you have an infinite number of blocks of each type.
 > Using these blocks, you want to make a wall that is rectangular parallelepiped of height N and length M and width 1 without any holes and notches. The wall you build should be one solid structure. A solid structure can be interpreted in one of the following ways:
 > It should not be possible to separate the wall along any vertical cut without cutting any lego block used to build the wall.
 > You cannot make a vertical cut from top to bottom without cutting one or more lego blocks.
 > The blocks can only be placed in such a way that the lenght, width and height of a block are parallel to the length, width and height of the wall. In how many ways can the wall be built?
 
-From this follows that the third dimension of the wall is 1 because it is explicitly mentioned. I think one cannot get this from the original text if one does not make some assumptions based on the experience with building lego walls in the childhood.
+From this follows that the third dimension of the wall is $1$ because it is explicitly mentioned. I think one cannot get this from the original text if one does not make some assumptions based on the experience with building lego walls in the childhood.
 
 Because the problem is not affected by the width it can be view as a two dimensional tiling problem, And because height dimension of the blocks also does not affect the problem, it can be viewed as one dimensional problem.
 
 [based on official editorial](https://www.hackerrank.com/challenges/one-month-preparation-kit-lego-blocks/editorial)
-By projecting the wall onto 2D plane, the question becomes how to use $1 \times 1, 1 \times 2, 1 \times 3$ and(or) $1 \times 4$ lego-"slice" to solidly cover a $H \times W$ rectangle without any holes or overlapping.
+By projecting the wall onto 2D plane, the question becomes how to use $1 \times 1, 1 \times 2, 1 \times 3$ and $1 \times 4$ lego blocks to solidly cover a $H \times W$ rectangle without any holes or overlapping.
 
 Please refer to the figure below for an example of the first test case, where the first three embeddings are valid, but the last is not since it is not solid.
 
@@ -353,7 +355,7 @@ We have has $4$ different ways to divide in $j = 1$.
 <path d="M588.939 56.0607C589.525 56.6464 590.475 56.6464 591.061 56.0607L600.607 46.5147C601.192 45.9289 601.192 44.9792 600.607 44.3934C600.021 43.8076 599.071 43.8076 598.485 44.3934L590 52.8787L581.515 44.3934C580.929 43.8076 579.979 43.8076 579.393 44.3934C578.808 44.9792 578.808 45.9289 579.393 46.5147L588.939 56.0607ZM588.5 -6.55671e-08L588.5 55L591.5 55L591.5 6.55671e-08L588.5 -6.55671e-08Z" fill="black"/>
 </svg>
 
-We have has $2$ different ways to divide in $j = 2$.
+We have has $3$ different ways to divide in $j = 2$.
 
 <svg width="510" height="161" viewBox="0 0 510 161" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect x="0.5" y="61.5" width="49" height="49" fill="white" stroke="black"/>
@@ -377,7 +379,7 @@ We have has $2$ different ways to divide in $j = 2$.
 
 so the number of valid $N = 2$ for $H[3]$ is $9$.
 
-The final answer will be $h[M]$, and be careful to deal with modulo when subtraction exists. :)
+The final answer will be $h[M]$, and be careful to deal with modulo when subtraction exists. :smile:
 
 > you must use BigInt, like 0n, 1n, 1000000007n, because question compute big number and this is a javascript feature that different than other languages like c++, python and pay attention to data overflow, seek mod first, and then check it again, because the negative balance in Python will automatically become an integer, such as -5 % 3 = 1 but java and javascript not.
 
